@@ -4,52 +4,34 @@ import axios from 'axios';
 import picture from '../../assets/LoginImg.jpg';
 import {
   Button,
-  Col,
   Form,
   Input,
-  Row,
-  message
+  message,
 } from 'antd';
 
 const Register = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
     //获取验证码
-    const getCaptcha = () => {
-        const values = form.getFieldsValue(['username', 'email']);
-        axios.post('/api/getCaptcha', {
-          user: values.username,
-          email: values.email
-        })
-        .then(function (response) {
-          if(response.data.success) {
-            message.success('Get captcha successful!');
-          } else {
-            message.error('Get captcha failed!');
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      }
     return (
         <div>
             <Form
+                form={form}
                 name="register"
                 initialValues={{ remember: true }}
                 onFinish={(values) => {
-                    axios.post('/api/login', {
+                    axios.post('http://10.29.73.74:8080/tour/register/code', {
                         username: values.username,
                         password: values.password,
                         email: values.email,
-                        captcha:values.captcha
+                        jwt:values.captcha
                     })
                     .then(function (response) {
-                        if(response.data.success) {
+                        if(response.data.msg==='success') {
                             message.success('Signup successful!');
                             navigate('/login');
                         } else {
-                            message.error('Signup failed!');
+                            message.error(response.data.msg);
                         }
                     })
                     .catch(function (error) {
@@ -143,7 +125,25 @@ const Register = () => {
                                 <Input placeholder="Captcha"/>
                             </Form.Item>
                             <Form.Item>
-                                <Button onClick={()=>{getCaptcha()}}>Get captcha</Button>
+                                <Button onClick={() => {
+        const values = form.getFieldsValue(['username', 'email']);
+        axios.post('http://10.29.73.74:8080/tour/register/valid', {
+          username: values.username,
+          email: values.email
+        })
+        .then(function (response) {
+          if(response.data.msg==='success') {
+            message.success('Get captcha successful!');
+          } else {
+            message.error(response.data.msg);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }
+
+                                }>Get captcha</Button>
                             </Form.Item>
                         </Form.Item>
 

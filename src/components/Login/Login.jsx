@@ -18,16 +18,16 @@ const Login = () => {
       name="login"
       initialValues={{ remember: true }}
       onFinish={(values) => {
-        axios.post('/api/login', {
+        axios.post('http://10.29.73.74:8080/tour/login', {
           username: values.username,
           password: values.password
         })
         .then(function (response) {
-          if(response.data.success) {
+          if(response.data.msg==='success') {
             message.success('Login successful!');
             navigate('/dashboard');
           } else {
-            message.error('Login failed!');
+            message.error(response.data.msg);
           }
         })
         .catch(function (error) {
@@ -39,7 +39,7 @@ const Login = () => {
         <div className="illustration-container">
           <img src={picture} alt="Illustration" />
         </div>
-        <div className="form-container">
+        <div className="form-login-container">
            <Form.Item><h2>TourStudy in BUPT</h2></Form.Item>
             <Form.Item
               name="username"
@@ -58,6 +58,7 @@ const Login = () => {
             <Button type="primary" htmlType="submit">
               Log in
             </Button>
+            <br/>
             <br/>
             <Button 
               onClick={()=>navigate('/register')}
