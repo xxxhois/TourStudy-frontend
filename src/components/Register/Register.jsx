@@ -1,6 +1,6 @@
 import "./Register.css";
 import {useNavigate} from 'react-router-dom';
-import axios from 'axios';
+import {request} from '../../utils/request'
 import picture from '../../assets/LoginImg.jpg';
 import {
   Button,
@@ -20,7 +20,7 @@ const Register = () => {
                 name="register"
                 initialValues={{ remember: true }}
                 onFinish={(values) => {
-                    axios.post('http://10.29.73.74:8080/tour/register/code', {
+                    request.post('/register/code', {
                         username: values.username,
                         password: values.password,
                         email: values.email,
@@ -126,23 +126,22 @@ const Register = () => {
                             </Form.Item>
                             <Form.Item>
                                 <Button onClick={() => {
-        const values = form.getFieldsValue(['username', 'email']);
-        axios.post('http://10.29.73.74:8080/tour/register/valid', {
-          username: values.username,
-          email: values.email
-        })
-        .then(function (response) {
-          if(response.data.msg==='success') {
-            message.success('Get captcha successful!');
-          } else {
-            message.error(response.data.msg);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      }
-
+                                    const values = form.getFieldsValue(['username', 'email']);
+                                    request.post('/register/valid', {
+                                    username: values.username,
+                                    email: values.email
+                                    })
+                                    .then(function (response) {
+                                    if(response.data.msg==='success') {
+                                        message.success('Get captcha successful!');
+                                    } else {
+                                        message.error(response.data.msg);
+                                    }
+                                    })
+                                    .catch(function (error) {
+                                    console.log(error);
+                                    });
+                                }
                                 }>Get captcha</Button>
                             </Form.Item>
                         </Form.Item>

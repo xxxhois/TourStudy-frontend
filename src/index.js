@@ -5,7 +5,9 @@ import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import About from './components/About/About';
 import BgVideo from './components/index/BgVideo';
-import Dashboard from './components/Dashboard/Dashboard';
+import Dashboard from './Dashboard/Dashboard';
+import {Authroute} from './utils/Authroute';
+import FormDemo from './components/UploadDiary/UploadDiary';
 
 const router = createBrowserRouter([
   {
@@ -26,9 +28,13 @@ const router = createBrowserRouter([
  },
  {
     path: '/dashboard',
-    element: <Dashboard />
-  
- }
+    //element : <Dashboard />
+    element: <Authroute><Dashboard /></Authroute> 
+ },
+ {
+  path: '/uploadDiary',
+  element: <FormDemo />
+}
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

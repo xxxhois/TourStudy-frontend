@@ -1,9 +1,9 @@
 import './Login.css'
 import { Form, Input, Button, message } from 'antd'
-import axios from 'axios'
-import { useDispatch } from 'react-redux'
+import {request} from '../../utils/request'
 import { useNavigate } from 'react-router-dom'
 import picture from '../../assets/LoginImg.jpg'
+
 //API参考
 // {
 //   "username": "ymj",
@@ -18,13 +18,15 @@ const Login = () => {
       name="login"
       initialValues={{ remember: true }}
       onFinish={(values) => {
-        axios.post('http://10.29.73.74:8080/tour/login', {
+        request.post('/login', {
           username: values.username,
           password: values.password
         })
         .then(function (response) {
           if(response.data.msg==='success') {
             message.success('Login successful!');
+            localStorage.setItem('token', response.data.data);
+            localStorage.setItem('username', values.username);
             navigate('/dashboard');
           } else {
             message.error(response.data.msg);
