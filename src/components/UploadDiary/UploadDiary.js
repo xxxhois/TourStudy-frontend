@@ -30,7 +30,7 @@ const FormDemo = () => {
                 request.post('/diary/upload', {
                     username: localStorage.getItem('username'),
                     title: values.title,
-                    content: values.content.toHTML(),// or values.content.toHTML()
+                    content: values.content.toHTML(),
                     tags: values.tags
                 })
                 .then(function (response) {

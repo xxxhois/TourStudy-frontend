@@ -5,9 +5,10 @@ import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import About from './components/About/About';
 import BgVideo from './components/index/BgVideo';
-import Dashboard from './Dashboard/Dashboard';
-import {Authroute} from './utils/Authroute';
+import Dashboard from './pages/Dashboard/Dashboard';
 import FormDemo from './components/UploadDiary/UploadDiary';
+import GetDiary from './components/GetDiary/GetDiary';
+import GetShortPath from './components/GetShortPath/GetShortPath';
 
 const router = createBrowserRouter([
   {
@@ -28,12 +29,20 @@ const router = createBrowserRouter([
  },
  {
     path: '/dashboard',
-    //element : <Dashboard />
-    element: <Authroute><Dashboard /></Authroute> 
+    element : <Dashboard />
+    //element: <Authroute><Dashboard /></Authroute> 
  },
  {
   path: '/uploadDiary',
   element: <FormDemo />
+},
+{
+  path: '/getDiary',
+  element: <GetDiary/>
+},
+{
+  path:'/Map',
+  element:<GetShortPath />
 }
 ]);
 

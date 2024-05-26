@@ -1,0 +1,23 @@
+Selection{
+    display: flex;
+    flex-direction: column;
+    right:0;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.map-graph{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.pointList{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
