@@ -2,8 +2,8 @@ import axios from 'axios';
 import { Navigate } from "react-router-dom";
 // 创建axios实例
 const request = axios.create({
-    //baseURL: 'http://10.29.73.74:8080/tour/', // api的base_url
-    baseURL: 'http://127.0.0.1:4523/m1/4095419-0-default/tour/', // api的base_url
+    baseURL: 'http://10.29.73.74:8080/tour/', // api的base_url
+    //baseURL: 'http://127.0.0.1:4523/m1/4095419-0-default/tour/', // api的base_url
     timeout: 5000 // 请求超时时间
 });
 

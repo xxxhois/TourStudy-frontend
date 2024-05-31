@@ -1,0 +1,15 @@
+.dash-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+.sidebar-container {
+    flex: 0 0 auto;
+    margin-right: 10px;
+  }
+  
+.active-component {
+    flex: 1 0 auto;
+    margin-left: 10px;
+    
+}

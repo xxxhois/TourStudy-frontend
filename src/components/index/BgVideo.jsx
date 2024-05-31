@@ -14,7 +14,7 @@ function BgVideo(){
                     <button id="login" onClick={()=>{navigate('/login')}}>Login</button>
                     <button id="register" onClick={()=>{navigate('/register')}}>Signup</button>
                 </div>
-                <div className="container">
+                <div className="index-container">
                     <h2 className="wlc">WELCOME</h2>
                     <h1 className="title">TRAVELLING AROUND THE WORLD</h1>
                 </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { request } from '../../utils/request';
 import { useState } from 'react';
+import './GetMap.css';
 const GetMap = () => {
     const canvasRef = useRef(null);
 
@@ -19,7 +20,7 @@ const GetMap = () => {
 
     const sendRequest = async () => {
         const requestBody = {
-            name: "graph",
+            name: "scene",
             indexes: indexArray
         };
         try {
@@ -58,7 +59,7 @@ const GetMap = () => {
         const ctx = canvas.getContext('2d');
         let points = [];
         //渲染地图
-        request.post('/map/get_map', { name: 'graph' })
+        request.post('/map/get_map', { name: 'scene' })
             .then(response => response.data.data)
             .then(data => {
                 console.log('Map data:', data);
@@ -88,7 +89,7 @@ const GetMap = () => {
                 image.onerror = () => {
                     console.error('Error loading image.');
                 };
-                image.src = `data:image/jpeg;base64,${picture}`;
+                image.src = `${picture}`;
             })
             .catch(error => {
                 console.error('Error fetching map data:', error);
@@ -112,8 +113,10 @@ const GetMap = () => {
     return (
         <div>
             <ul id="pointList"></ul>
-            <button className='search-short-path' onClick={sendRequest}>查询最短路径</button>
+            <div className='map-container'>         
             <canvas className='map-graph' ref={canvasRef} width={800} height={600} />
+            <button className='search-short-path' onClick={sendRequest}>查询最短路径</button>
+            </div>
         </div>
     );
 };
