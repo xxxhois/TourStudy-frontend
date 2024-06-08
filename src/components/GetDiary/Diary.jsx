@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Space, Modal, message, Select, Form } from 'antd';
-import { request } from '../../utils/request';
-import PostDetail from '../PostDetail/PostDetail';
 import GetDiary from './GetDiary';
+import GetSortedDiary from './GetSortedDiary';
+import './Diary.css';
 
 const Diary = () => {
     return (
-        <>
-            <GetDiary />
-            <GetSortedDiary />
-        </>
+        <div className='diary'>
+            <div className='getdiary'><GetDiary /></div>
+            <div className='getsorteddiary'><GetSortedDiary /></div>
+        </div>
     );
 };
 

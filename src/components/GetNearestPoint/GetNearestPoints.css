@@ -1,0 +1,13 @@
+.near_container{
+    display: flex;
+    margin-top: 50px;
+    overflow: auto;
+}
+.near_search_container{
+    flex:0 0 15%;
+    margin-right: 10px;
+}
+.near_map_container{
+    flex:1 0 85%;
+    margin-left: 10px;
+}

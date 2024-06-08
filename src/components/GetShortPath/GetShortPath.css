@@ -1,0 +1,25 @@
+
+.get_short_path {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+.select_point {
+    flex: 0 0 auto;
+    margin-right: 5px;
+    margin-top:10px;
+  }
+  
+.get_map {
+    flex: 1 0 auto;
+    margin-left: 5px;
+    
+}
+
+.select_map{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.select_map_ant {
+    width: 100%;
+}

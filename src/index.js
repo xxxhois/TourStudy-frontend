@@ -9,6 +9,8 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import FormDemo from './components/UploadDiary/UploadDiary';
 import GetDiary from './components/GetDiary/GetDiary';
 import GetShortPath from './components/GetShortPath/GetShortPath';
+import Slides from './components/Slides/Slides';
+import ImageGenerator from './utils/generateIMG';
 
 const router = createBrowserRouter([
   {
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
 {
   path:'/Map',
   element:<GetShortPath />
+},
+{
+  path:'/slides',
+  element:<Slides />
+},
+{
+  path:'/img',
+  element:<ImageGenerator/>
 }
 ]);
 

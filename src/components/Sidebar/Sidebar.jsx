@@ -12,8 +12,12 @@ const items = [
         label: '多点最短路径导航',
       },
       {
-        key: 'g2',
+        key: 'getCrowdedSortedPath',
         label: '拥挤度最短路径导航',
+      },
+      {
+        key: 'getNearestPoints',
+        label: '查看周边设施',
       },
     ],
   },
@@ -41,22 +45,14 @@ const items = [
     icon: <AppstoreOutlined />,
     children: [
       {
-        key: '9',
-        label: 'Option 9',
-      },
-      {
-        key: '10',
-        label: 'Option 10',
-      },
-      {
-        key: '11',
-        label: 'Option 11',
-      },
-      {
-        key: '12',
-        label: 'Option 12',
+        key: 'getTourism',
+        label: '查看推荐旅游景点',
       },
     ],
+  },
+  {
+    key: 'slides',
+    label: '根据描述生成游学动画',
   },
 ];
 const Sidebar = ({ onClick }) => {
@@ -70,7 +66,7 @@ const Sidebar = ({ onClick }) => {
         width: 256,
       }}
       defaultSelectedKeys={['1']}
-      defaultOpenKeys={['sub1']}
+      defaultOpenKeys={['uploadDiary']}
       mode="inline"
       items={items}
     />

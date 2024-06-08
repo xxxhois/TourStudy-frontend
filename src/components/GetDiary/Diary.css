@@ -1,0 +1,14 @@
+.diary {
+    display: flex;
+    justify-content: space-around;
+}
+
+.getdiary {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.getsorteddiary {
+    flex: 1;
+    margin-left: 10px;
+}

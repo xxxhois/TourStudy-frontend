@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Space, Modal, message, Select, Form, Button, Checkbox } from 'antd';
+import { Card, Space, Modal, message, Col, Form, Button, Input } from 'antd';
 import { request } from '../../utils/request';
 import PostDetail from '../PostDetail/PostDetail';
 import './GetDiary.css';
@@ -10,12 +10,13 @@ const GetDiary = () => {
     const [showDetail, setShowDetail] = useState(false);
     const [activeDiary, setActiveDiary] = useState(null);
     const [form] = Form.useForm();
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await request.post('/diary/get_diary', {
                     username: localStorage.getItem('username'),
-                    title: 't'
+                    title: ''
                 });
                 const { data } = response.data;
                 setDiaries(data);
@@ -27,6 +28,7 @@ const GetDiary = () => {
         fetchData();
     }, []);
 
+
     const add_page_views = async (diary) => {
         try {
             await request.post('/diary/add_page_views', {
@@ -34,6 +36,10 @@ const GetDiary = () => {
                 title: diary.title
             });
             message.info('Page views added successfully');
+            const updatedDiaries = diaries.map(d =>
+                d.title === diary.title ? { ...d, pageViews: d.pageViews + 1 } : d
+            );
+            setDiaries(updatedDiaries);
         } catch (error) {
             console.error('Error adding page views:', error);
         }
@@ -57,15 +63,12 @@ const GetDiary = () => {
                     name="sort_diary"
                     initialValues={{ remember: true }}
                     onFinish={(values) => {
-                        request.post('/map/get_sorted_diary', {
-                            views: true,
-                            score: true,
-                            length: 10,
-                            keywords: values.keywords,
-                            tags: values.tags
+                        request.post('/diary/get_diary', {
+                            username: localStorage.getItem('username'),
+                            title: values.title
                         })
                             .then(function (response) {
-                                if (response.data.msg === 'success') {
+                                if (response.data.code === 200) {
                                     message.success('Search successful!');
                                     const { data } = response.data;
                                     setDiaries(data);
@@ -78,24 +81,11 @@ const GetDiary = () => {
                             });
                     }}
                 >
-                    <Form.Item name='views' label="Views">
-                        <Checkbox>根据浏览量排序</Checkbox>
-                    </Form.Item>
-                    <Form.Item name='score' label="Views">
-                        <Checkbox>根据分数排序</Checkbox>
-                    </Form.Item>
-                    <Form.Item name='keywords' label="Select">
-                        <Select mode='tags'>
-                            <Select.Option value="demo1">Demo1</Select.Option>
-                            <Select.Option value="demo2">Demo2</Select.Option>
-                        </Select>
-                    </Form.Item>
-                    <Form.Item name='tags' label="Select">
-                        <Select mode='tags'>
-                            <Select.Option value="demo1">Demo1</Select.Option>
-                            <Select.Option value="demo2">Demo2</Select.Option>
-                        </Select>
-                    </Form.Item>
+                    <Col span={20}>
+                        <Form.Item name='title' label="输入标题（前缀）">
+                            <Input />
+                        </Form.Item>
+                    </Col>
                     <Form.Item>
                         <Button type="primary" htmlType="submit">
                             搜索
@@ -104,7 +94,7 @@ const GetDiary = () => {
                 </Form>
             </div>
             <div className='diary-container'>
-                <Space className='card-container' direction="horizontal" size={16}>
+                <Space className='card-container' direction="vertical" size={16}>
                     {diaries.map(diary => (
                         <Card
                             key={diary.title}
@@ -112,7 +102,7 @@ const GetDiary = () => {
                             style={{
                                 width: 300,
                             }}
-                            onClick={handleDetailClick}>
+                            onClick={() => handleDetailClick(diary)}>
                             <label>总浏览量：{diary.pageViews}</label>
                             <label>rating:{diary.ratings}</label>
 
@@ -123,10 +113,10 @@ const GetDiary = () => {
                     ))}
                 </Space>
                 <Modal
-                    // title=""
                     open={showDetail}
                     onCancel={handleModalClose}
                     footer={null}
+                    className='modal'
                 >
                     {activeDiary && <PostDetail diary={activeDiary} />}
                 </Modal>

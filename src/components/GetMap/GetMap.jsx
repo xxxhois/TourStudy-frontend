@@ -1,69 +1,77 @@
 import React, { useEffect, useRef } from 'react';
 import { request } from '../../utils/request';
-import { useState } from 'react';
 import './GetMap.css';
-const GetMap = () => {
+import { message } from 'antd';
+const GetMap = ({pointArray, setPointArray, map, setAllPoints, path, crowdMode, newMap, adjacencyCrowdedList}) => {
     const canvasRef = useRef(null);
-
-    const [indexArray, setIndexArray] = useState([]);
-    //点击加入Index提交列表
-    const handlePointClick = (point) => {
-        // Add the point's name to the list
-        const list = document.getElementById('pointList');
-        const listItem = document.createElement('li');
-        listItem.textContent = point.name;
-        list.appendChild(listItem);
-        // Add the point's index to the array
-        indexArray.push(point.index);
-        console.log(indexArray);
-    };
-
-    const sendRequest = async () => {
-        const requestBody = {
-            name: "scene",
-            indexes: indexArray
-        };
-        try {
-            const response = await request.post('map/get_shortest_path', requestBody);
-            console.log('Response:', response);
-            drawPath(response.data.data);
-            if (response.status !== 200) {
-                throw new Error('Request failed!');
+    const crowdedColor = (index, Nindex) => {
+        console.log("index"+index+"Nindex"+Nindex)
+        let crowdedness = 0;
+        // console.log("crowdedness"+ adjacencyCrowdedList)
+        adjacencyCrowdedList[index].forEach((item) => {
+            if (item.destination === Nindex) {
+                crowdedness = item.crowdedness;
             }
-            setIndexArray([]); // 清空数组
-        } catch (error) {
-            console.error('Error:', error);
+        });
+        switch (crowdedness) {
+            case 0.0:
+                return 'green';
+            case 0.33:
+                return 'yellow';
+            case 0.66:
+                return 'orange';
+            case 1.0:
+                return 'red';
+            default:
+                return 'green';
         }
+    }
+    
+    //点击加入Index提交列表
+    const handlePointClick = (point, ctx) => {
+        console.log('Point clicked:', point);
+        setPointArray(prevArray => [...prevArray, point]);
     };
+
+    useEffect(() => {
+        drawPath(path);
+        console.log("当前路线"+path);
+    },[path,newMap]);
+
 
     const drawPath = (data) => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
-        ctx.strokeStyle = 'red';
         ctx.lineWidth = 2;
-        ctx.beginPath();
+        let prevPoint = data[0];
         data.forEach((point, index) => {
             const { x, y } = point;
-            if (index === 0) {
-                ctx.moveTo(x, y);
-            } else {
+            if (index !== 0) {
+                ctx.beginPath();
+                ctx.strokeStyle = crowdMode ? crowdedColor(prevPoint.index, point.index) : 'black';
+                ctx.moveTo(prevPoint.x, prevPoint.y);
                 ctx.lineTo(x, y);
+                ctx.stroke();
             }
+            prevPoint = point;
         });
-        ctx.stroke();
         console.log('Path has been drawn.');
     }
 
     useEffect(() => {
+        
+        console.log("我在渲染地图！")
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         let points = [];
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         //渲染地图
-        request.post('/map/get_map', { name: 'scene' })
+        request.post('/map/get_map', { name: map })
             .then(response => response.data.data)
             .then(data => {
                 console.log('Map data:', data);
                 points = data.points;
+                setAllPoints(points);
                 const { picture } = data;
                 // Load the map image
                 const image = new Image();
@@ -78,7 +86,11 @@ const GetMap = () => {
                         // Draw a circle at the point's coordinates
                         ctx.beginPath();
                         ctx.arc(x, y, 5, 0, 2 * Math.PI);
-                        ctx.fillStyle = 'red';
+                        if (pointArray.includes(point)) {
+                            ctx.fillStyle = 'blue';
+                        } else {
+                            ctx.fillStyle = 'red';
+                        }
                         ctx.fill();
                         // Draw the point's name next to the circle
                         ctx.fillStyle = 'black';
@@ -95,27 +107,30 @@ const GetMap = () => {
                 console.error('Error fetching map data:', error);
             });
 
-        canvas.addEventListener('click', function (event) {
-            // Get the click position
-            const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
-            // Check if the click is within the radius of any point
-            points.forEach(point => {
-                const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
-                if (distance < 5) {
-                    handlePointClick(point);
-                }
+            canvas.addEventListener('click', function (event) {
+                const ctx = canvas.getContext('2d');
+                // Get the click position
+                const rect = canvas.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                // Check if the click is within the radius of any point
+                points.forEach(point => {
+                    const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
+                    if (distance < 5) {
+                        handlePointClick(point, ctx);
+                    }
+                });
             });
-        });
-        console.log(canvas);
-    }, []);
+    }, [newMap,map]);
+
+        
+
     return (
         <div>
-            <ul id="pointList"></ul>
-            <div className='map-container'>         
-            <canvas className='map-graph' ref={canvasRef} width={800} height={600} />
-            <button className='search-short-path' onClick={sendRequest}>查询最短路径</button>
+            {/* <ul id="pointList"></ul> */}
+            <div className='map-container'>
+            <canvas className='map-graph' ref={canvasRef} width={1000} height={800}/>
+            {/* <button className='search-short-path' onClick={sendRequest}>查询最短路径</button> */}
             </div>
         </div>
     );
